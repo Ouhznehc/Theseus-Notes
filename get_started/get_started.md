@@ -1,6 +1,6 @@
 # Get Started
 
-Since I use macOS Sonoma Version 14.3.1(Apple M1 Pro) for study, only guidance on **MacOS** will be introduced below. As for other systems, check out (here)[https://github.com/theseus-os/Theseus] for more information.
+Since I use macOS Sonoma Version 14.3.1(Apple M1 Pro) for study, only guidance on **MacOS** will be introduced below. As for other systems, check out [here](https://github.com/theseus-os/Theseus) for more information.
 
 ## Setting up the environment
 
