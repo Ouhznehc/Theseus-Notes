@@ -2,6 +2,5 @@
 
 * [Introduction](README.md)
 
-## Get Started
-
-* [Quick Start](get_started/quick_start.md)
+* [Get Started](get_started/get_started.md)
+ 

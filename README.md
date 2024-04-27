@@ -4,7 +4,7 @@
 
 [Theseus](https://github.com/theseus-os/Theseus) is a new OS written from scratch in [Rust](https://www.rust-lang.org/) to experiment with novel OS structure, better state management, and how to leverage **intralingual design** principles to shift OS responsibilities like resource management into the compiler.
 
-
+For more info, check out Theseus's [documentation](#Documentation) or [published academic papers](https://theseus-os.github.io/Theseus/book/misc/papers_presentations.html), which describe Theseus's design and implementation.
 
 ## Introduction to Theseus Notes
 
