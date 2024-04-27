@@ -1,7 +1,7 @@
 # Table of contents
 
-* [Theseus Notes](README.md)
+* [Introduction](README.md)
 
-## Group 2
+## Get Started
 
-* [Page 3](group-2/page-3.md)
+* [Quick Start](get_started/quick_start.md)
