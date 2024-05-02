@@ -1,4 +1,4 @@
-# Initial assembly code
+# Initial Assembly Code
 
 Theseus starts from the `_start` function in `kernel/nano_core/src/asm/bios/boot.asm`, which is an assembly file. Next, we will progressively dissect the contents of this file.
 
@@ -62,8 +62,8 @@ _start:
 
 Theseus starts from `_start`. We will go through the code line by line to understand its functionality. The first line `mov esp, initial_bsp_stack_top - KERNEL_OFFSET` sets the initial top of the stack. The `initial_bsp_stack_top` is defined in the section shown below. As for why `KERNEL_OFFSET` is subtracted, although there is a comment provided in the code, the author has limited understanding of this aspect and cannot provide an explanation, so this part will be omitted for now.
 
-
 ## Stack Layout
+
 ```asm
 ; Note that the linker script (`linker_higher_half.lf`) inserts a 2MiB space here 
 ; in order to provide stack guard pages beneath the .stack section afterwards.
@@ -94,9 +94,4 @@ initial_double_fault_stack_top:
 
 The above code defines the layout of the stack, including two sections: `.guard_huge_page` and `.stack`. In the `.stack` section, memories are allocated and several constants are defined to point to specific memory addresses. The `.guard_huge_page` section is used to provide stack guard pages, which are essential for protecting the stack from overflow and other vulnerabilities.
 
-<img src="stack.png" alt="stack" align="center" style="zoom:300%;" />
-
-
-
-
-
+<figure><img src="stack.png" alt=""><figcaption></figcaption></figure>
