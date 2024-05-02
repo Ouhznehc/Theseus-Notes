@@ -95,3 +95,124 @@ initial_double_fault_stack_top:
 The above code defines the layout of the stack, including two sections: `.guard_huge_page` and `.stack`. In the `.stack` section, memories are allocated and several constants are defined to point to specific memory addresses. The `.guard_huge_page` section is used to provide stack guard pages, which are essential for protecting the stack from overflow and other vulnerabilities.
 
 <figure><img src="stack.png" alt=""><figcaption></figcaption></figure>
+
+## Check Routines
+
+Since the instruction `mov edi, ebx` is sufficiently explained in the source code comments, there is no need for further elaboration here. Let's now jump into the check routines:
+
+```asm
+	call check_multiboot
+	call check_cpuid
+	call check_long_mode
+```
+### Error Handling
+
+```asm
+; Prints `ERR: ` and the given error code to screen and hangs.
+; parameter: error code (in ascii) in al
+global _error
+_error:
+	mov dword [0xb8000], 0x4f524f45
+	mov dword [0xb8004], 0x4f3a4f52
+	mov dword [0xb8008], 0x4f204f20
+	mov byte  [0xb800a], al
+	hlt
+```
+
+During the startup process, Theseus uses the `_error` function to handle errors. This function takes an ASCII code as a parameter (stored in the `al` register) and displays `ERR: ` followed by the given error code on the screen, then hangs the system. Specifically, each character on the screen is represented by two bytes: the higher 8 bits set the foreground and background colors of the character, while the lower 8 bits represent the character's ASCII code.
+
+The `_error` function writes to the memory address `0xb8000` starting with the values `0x4f524f45`, `0x4f3a4f52`, `0x4f204f20`, and the ASCII code from the parameter. The `0x4f` represents the color, and `0xb8000` is the starting address of the video memory. The bytes are stored in little-endian order, resulting in the screen displaying the characters 'E', 'R', 'R', ':', ' ', ' ', and the ASCII parameter sequentially.
+
+
+### Check Multiboot
+
+```asm
+check_multiboot:
+	cmp eax, 0x36d76289
+	jne .no_multiboot
+	ret
+.no_multiboot:
+	mov al, "0"
+	jmp _error
+```
+
+
+The `check_multiboot` function verifies if the correct multiboot magic number is present. It performs this check by comparing the value in the `EAX` register with the predefined **magic number** `0x36d76289`. If the values do not match, indicating that the magic number is incorrect, the function proceeds to the `.no_multiboot` section. Here, it sets the error code by placing the ASCII character `"0"` into the `AL` register and then jumps to the `_error` function to halt the system, which effectively handles the error scenario.
+
+### Check CPUID
+
+```asm
+check_cpuid:
+	; Check if CPUID is supported by trying to flip the ID bit (bit 21)
+	; in the FLAGS register. If we can flip it, CPUID is availible
+	pushfd
+	pop eax
+
+	mov ecx, eax
+
+	;Flip ID
+	xor eax, 1 << 21
+
+	;Copy eax to FLAGS
+	push eax
+	popfd
+
+	;Get and recover FLAGS
+	pushfd
+	pop eax
+	push ecx
+	popfd
+
+	;compare the saved FLAGS
+	cmp eax, ecx
+	je .no_cpuid
+	ret
+.no_cpuid:
+	mov al, "1"
+	jmp _error
+```
+
+The code segment is designed to verify whether the current CPU supports the CPUID instruction, essential for querying detailed processor information. Initially, the FLAGS register is saved and restored to `EAX` using `pushfd` and `pop eax`, respectively. The original FLAGS value is then copied into `ECX` for later comparison. To test if the CPU supports modification of the ID bit, the code flips this bit in `EAX` using `xor eax, 1 << 21`, writes this modified value back to the FLAGS register, and reads it back into `EAX`. After this, the original FLAGS value is restored from `ECX`.
+
+A comparison between the modified and original FLAGS values (`cmp eax, ecx`) determines support for the CPUID instruction. If the values match, indicating the ID bit could not be modified, the processor does not support CPUID, triggering an error handling routine. This is accomplished by setting an ASCII '1' in `AL` and jumping to `_error`. This process ensures that only processors meeting the necessary functionality standards continue with the system initialization, critical for operating systems that require detailed processor information for optimal performance.
+
+### Check Long Mode
+
+```asm
+check_long_mode:
+	; test if extended processor info in available
+	mov eax, 0x80000000    ; implicit argument for cpuid
+	cpuid                  ; get highest supported argument
+	cmp eax, 0x80000001    ; it needs to be at least 0x80000001
+	jb .no_long_mode       ; if it's less, the CPU is too old for long mode
+
+	; use extended info to test if long mode is available
+	mov eax, 0x80000001    ; argument for extended processor info
+	cpuid                  ; returns various feature bits in ecx and edx
+	test edx, 1 << 29      ; test if the LM-bit is set in the D-register
+	jz .no_long_mode       ; If it's not set, there is no long mode
+	ret
+.no_long_mode:
+	mov al, "2"
+	jmp _error
+```
+
+The assembly code for `check_long_mode` is clearly annotated to ensure understanding of the checks it performs to verify the processor's support for long mode, crucial for 64-bit operations. The comments within the code are sufficiently detailed, thus no further explanation is necessary here.
+
+## Set-up Routines
+
+In the following section, we will delve into the key initialization routines that prepare the system for optimal performance. This includes setting up essential processor features and memory management configurations.
+
+```asm
+	call set_up_SSE
+%ifdef ENABLE_AVX
+	call set_up_AVX
+%endif ; ENABLE_AVX
+
+	call set_up_page_tables
+	call unmap_guard_page
+	call enable_paging
+```
+
+
+

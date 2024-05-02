@@ -10,6 +10,6 @@ For more info, check out Theseus's [documentation](#Documentation) or [published
 
 Theseus Notes, is a personal collection of insights, observations, and reflections as I navigate through the complexities of Theseus OS. It is intended to serve as both a learning resource for myself and a reference guide for others interested in understanding the internals of modern operating systems.
 
-Throughout this book, I will explore various components of Theseus OS, dissecting its architecture, examining its codebase, and discussing the underlying design principles. My goal is to provide a comprehensive overview of Theseus OS while sharing my own learning experiences and discoveries along the way.
+Throughout this book, I will delve into various components of Theseus OS, dissecting its architecture, examining its codebase, and discussing the underlying design principles that make it unique. My journey is supported by the advanced capabilities of GPT-4, a tool that not only reads code but provides explanations and insights that enhance understanding. I am particularly thrilled to have such a powerful assistant in decoding complex software structures, which allows me to present a comprehensive overview of Theseus OS while sharing my own learning experiences and discoveries along the way.
 
 <!-- Whether you're a seasoned developer, a curious enthusiast, or simply intrigued by the world of operating systems, I hope that Theseus Notes will prove to be an informative and engaging resource for your journey into the heart of Theseus OS. -->
