@@ -94,7 +94,7 @@ initial_double_fault_stack_top:
 
 The above code defines the layout of the stack, including two sections: `.guard_huge_page` and `.stack`. In the `.stack` section, memories are allocated and several constants are defined to point to specific memory addresses. The `.guard_huge_page` section is used to provide stack guard pages, which are essential for protecting the stack from overflow and other vulnerabilities.
 
-<img src="stack.png" alt="stack" style="zoom:100%;" />
+<img src="stack.png" alt="stack" align="center" style="zoom:300%;" />
 
 
 
