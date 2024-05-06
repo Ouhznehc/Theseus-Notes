@@ -60,7 +60,7 @@ _start:
 	jmp GDT.code:long_mode_start; -> !
 ```
 
-Theseus starts from `_start`. We will go through the code line by line to understand its functionality. The first line `mov esp, initial_bsp_stack_top - KERNEL_OFFSET` sets the initial top of the stack. The `initial_bsp_stack_top` is defined in the section shown below. As for why `KERNEL_OFFSET` is subtracted, although there is a comment provided in the code, the author has limited understanding of this aspect and cannot provide an explanation, so this part will be omitted for now.
+Theseus starts from `_start`. We will go through the code line by line to understand its functionality. The first line `mov esp, initial_bsp_stack_top - KERNEL_OFFSET` sets the initial top of the stack. The `initial_bsp_stack_top` is defined in the section shown below. As for why `KERNEL_OFFSET` is subtracted, since the kernel begins in virtual address `KERNEL_OFFSET`, when we need to access physical address, `-KERNEL_OFFSET` is necessary.
 
 ## Stack Layout
 
